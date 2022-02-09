@@ -1,0 +1,23 @@
+name: JunkGameSelector
+version: '${project.version}'
+main: net.azisaba.junkgames.junkgameselector.JunkGameSelector
+api-version: 1.17
+authors: [ 5hak3 ]
+description: Game world select for JunkGames!
+
+softdepend:
+  - Multiverse-Core
+
+permissions:
+  jgselector.admin:
+    default: op
+  jgselector.member:
+    default: not op
+
+commands:
+  jgselector:
+    description: JGSelectorを開きます．
+    permission: jgselector.member
+  jgsreload:
+    description: 設定を再読み込みします．
+    permission: jgselector.admin

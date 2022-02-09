@@ -1,0 +1,16 @@
+# ゲームのリスト
+gamelist:
+  example1:
+    title: GameTitle1
+    materialName: OAK_SIGN
+    worldName: world
+    details:
+      - Detail row1
+      - Detail row2
+  example2:
+    title: GameTitle2
+    materialName: SLIME_BALL
+    worldName: world
+    details:
+      - Detail row3
+      - Detail row4
