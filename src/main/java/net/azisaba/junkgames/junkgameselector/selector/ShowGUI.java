@@ -82,6 +82,7 @@ public class ShowGUI implements Listener, CommandExecutor {
     @EventHandler(priority = EventPriority.HIGH)
     public void onUse(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getItem() == null) return;
         if (!event.getItem().equals(trgItem)) return;
 
         event.getPlayer().openInventory(this.gui);
