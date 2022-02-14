@@ -18,6 +18,9 @@ commands:
   jgselector:
     description: JGSelectorを開きます．
     permission: jgselector.member
+  jgsgive:
+    description: JGSelectorを開くアイテムを入手します．
+    permission: jgselector.member
   jgsreload:
     description: 設定を再読み込みします．
     permission: jgselector.admin

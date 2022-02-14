@@ -23,6 +23,7 @@ public final class JunkGameSelector extends JavaPlugin {
         Reload reload = new Reload(cl, sgui);
 
         Objects.requireNonNull(getCommand("jgselector")).setExecutor(sgui);
+        Objects.requireNonNull(getCommand("jgsgive")).setExecutor(sgui);
         Objects.requireNonNull(getCommand("jgsreload")).setExecutor(reload);
         getServer().getPluginManager().registerEvents(sgui, this);
         getServer().getPluginManager().registerEvents(ogui, this);

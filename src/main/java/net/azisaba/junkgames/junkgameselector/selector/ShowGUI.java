@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,6 +39,7 @@ public class ShowGUI implements Listener, CommandExecutor {
         meta.setDisplayName(ChatColor.RED + "JGSelectorを開く！");
         meta.setLore(List.of("右クリックでJunk Game Selectorを開きます．"));
         meta.setCustomModelData(100);
+        trgItem.addEnchantment(Enchantment.BINDING_CURSE, 0);
         trgItem.setItemMeta(meta);
     }
 
@@ -63,7 +65,9 @@ public class ShowGUI implements Listener, CommandExecutor {
     }
 
     /**
-     * コマンドが発行されたとき，senderにJGSelectorのGUIを出す
+     * コマンドが発行されたとき，
+     * jgselectorならsenderにJGSelectorのGUIを出す．
+     * jgsgiveならsenderがtrgItemを持っていなければ渡す．
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -71,8 +75,15 @@ public class ShowGUI implements Listener, CommandExecutor {
             sender.sendMessage(ChatColor.RED + "このコマンドはプレイヤー専用です．");
             return false;
         }
-
-        ((Player) sender).openInventory(this.gui);
+        if (command.getName().equalsIgnoreCase("jgselector")) ((Player) sender).openInventory(this.gui);
+        else if (command.getName().equalsIgnoreCase("jgsgive")) {
+            if (((Player) sender).getInventory().contains(trgItem)) {
+                sender.sendMessage(ChatColor.RED + "あなたは既に起動アイテムを持っています．");
+                return true;
+            }
+            ((Player) sender).getInventory().addItem(trgItem);
+            sender.sendMessage(ChatColor.AQUA + "起動アイテムを配布しました．");
+        }
         return true;
     }
 
@@ -91,20 +102,18 @@ public class ShowGUI implements Listener, CommandExecutor {
 
     /**
      * 参加時にtrgItemを持っていなければ配布する．
+     * → 廃止
      */
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Inventory pInv = event.getPlayer().getInventory();
-        if (!pInv.contains(trgItem)) pInv.addItem(trgItem);
     }
 
     /**
      * ワールド移動時にtrgItemを持っていなければ配布する．
+     * → 廃止
      */
     @EventHandler
     public void onMove(PlayerChangedWorldEvent event) {
-        Inventory pInv = event.getPlayer().getInventory();
-        if (!pInv.contains(trgItem)) pInv.addItem(trgItem);
     }
 
     /**
