@@ -1,5 +1,6 @@
 package net.azisaba.junkgames.junkgameselector.config;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -8,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.InvalidObjectException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class GameDetail {
     public final String name;
@@ -23,8 +25,8 @@ public abstract class GameDetail {
         this.displayItem = new ItemStack(mat);
 
         ItemMeta meta = Objects.requireNonNull(this.displayItem.getItemMeta());
-        meta.setDisplayName(name);
-        meta.setLore(details);
+        meta.displayName(Component.text(name));
+        meta.lore(details.stream().map(Component::text).collect(Collectors.toList()));
         this.displayItem.setItemMeta(meta);
     }
 

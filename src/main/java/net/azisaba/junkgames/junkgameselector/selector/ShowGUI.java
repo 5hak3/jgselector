@@ -2,13 +2,16 @@ package net.azisaba.junkgames.junkgameselector.selector;
 
 import net.azisaba.junkgames.junkgameselector.config.ConfigLoader;
 import net.azisaba.junkgames.junkgameselector.config.GameDetail;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +24,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -35,17 +40,28 @@ public class ShowGUI implements Listener, CommandExecutor {
     static {
         trgItem = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = trgItem.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(ChatColor.RED + "JGSelectorを開く！");
-        meta.setLore(List.of("右クリックでJunk Game Selectorを開きます．"));
+        assert meta != null;//ChatColor.RED +
+        meta.displayName(Component.text("JGSelectorを開く！").color(TextColor.color(0xff,0,0)));
+        meta.lore(List.of(Component.text("右クリックでJunk Game Selectorを開きます．")));
         meta.setCustomModelData(100);
         trgItem.setItemMeta(meta);
+    }
+
+    /**
+     * GUIを表示するトリガーメッセージの定義
+     */
+    private static final Component trgMsg;
+    static {
+        trgMsg = Component.text("Junk Game Selectorを開く！")
+                .decorate(TextDecoration.UNDERLINED)
+                .color(TextColor.color(0,0xff,0xff))
+                .clickEvent(ClickEvent.runCommand("/jgselector"));
     }
 
     public ShowGUI(ConfigLoader cl) {
         this.cl = cl;
         this.gui = Bukkit.createInventory(new SelectorGUIHolder("jgsgui"), 54,
-                ChatColor.GREEN + "Junk Game Selector!");
+                Component.text("Junk Game Selector!").color(TextColor.color(0,0xff,0)));
         this.makeGUI();
     }
 
@@ -69,7 +85,7 @@ public class ShowGUI implements Listener, CommandExecutor {
      * jgsgiveならsenderがtrgItemを持っていなければ渡す．
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "このコマンドはプレイヤー専用です．");
             return false;
@@ -101,18 +117,23 @@ public class ShowGUI implements Listener, CommandExecutor {
 
     /**
      * 参加時にtrgItemを持っていなければ配布する．
-     * → 廃止
+     * → 廃止，参加時にチャットにJGSを開くメッセージを流す
      */
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        Bukkit.getScheduler().runTaskLater(
+                JavaPlugin.getProvidingPlugin(this.getClass()),
+                () -> event.getPlayer().sendMessage(trgMsg),
+                20 * 3);
     }
 
     /**
      * ワールド移動時にtrgItemを持っていなければ配布する．
-     * → 廃止
+     * → 廃止，ワールド移動時にチャットにJGSを開くメッセージを流す
      */
     @EventHandler
     public void onMove(PlayerChangedWorldEvent event) {
+        event.getPlayer().sendMessage(trgMsg);
     }
 
     /**
