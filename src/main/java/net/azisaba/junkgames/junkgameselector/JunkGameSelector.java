@@ -27,6 +27,7 @@ public final class JunkGameSelector extends JavaPlugin {
         Objects.requireNonNull(getCommand("jgsreload")).setExecutor(reload);
         getServer().getPluginManager().registerEvents(sgui, this);
         getServer().getPluginManager().registerEvents(ogui, this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getLogger().info("Load Plugin Success!!!");
     }
 }

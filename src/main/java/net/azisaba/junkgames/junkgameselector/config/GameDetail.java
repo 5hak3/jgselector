@@ -1,8 +1,7 @@
 package net.azisaba.junkgames.junkgameselector.config;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -10,18 +9,12 @@ import java.io.InvalidObjectException;
 import java.util.List;
 import java.util.Objects;
 
-public class GameDetail {
+public abstract class GameDetail {
     public final String name;
-    public final World world;
     public final ItemStack displayItem;
 
-    public GameDetail(String name, String worldName, String materialName, List<String> details) throws InvalidObjectException {
+    public GameDetail(String name, String materialName, List<String> details) throws InvalidObjectException {
         this.name = name;
-
-        this.world = Bukkit.getWorld(worldName);
-        if (this.world == null) {
-            throw new InvalidObjectException("World Name is not found.");
-        }
 
         Material mat = Material.getMaterial(materialName);
         if (mat == null) {
@@ -35,9 +28,11 @@ public class GameDetail {
         this.displayItem.setItemMeta(meta);
     }
 
+    abstract public void teleport(Player player);
+
     @Override
     public String toString() {
-        return "GameDetail{" +
+        return "GameWorldDetail{" +
                 "name='" + name + '\'' +
                 '}';
     }

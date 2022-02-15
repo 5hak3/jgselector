@@ -25,9 +25,7 @@ public class OperateGUI implements Listener {
 
         for (GameDetail game: cl.getGames()) {
             if (clicked.equals(game.displayItem)) {
-                assert game.world != null;
-                player.teleport(game.world.getSpawnLocation());
-                return;
+                game.teleport(player);
             }
         }
 

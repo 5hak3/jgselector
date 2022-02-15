@@ -39,7 +39,6 @@ public class ShowGUI implements Listener, CommandExecutor {
         meta.setDisplayName(ChatColor.RED + "JGSelectorを開く！");
         meta.setLore(List.of("右クリックでJunk Game Selectorを開きます．"));
         meta.setCustomModelData(100);
-        trgItem.addEnchantment(Enchantment.BINDING_CURSE, 0);
         trgItem.setItemMeta(meta);
     }
 

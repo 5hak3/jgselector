@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ConfigLoader {
     private final JavaPlugin plugin;
@@ -40,19 +39,29 @@ public class ConfigLoader {
             assert cs != null;
             String title = cs.getString("title");
             String worldName = cs.getString("worldName");
+            String serverName = cs.getString("serverName");
             String materialName = cs.getString("materialName");
             List<String> details = cs.getStringList("details");
 
-            if (title == null || worldName == null || materialName == null) {
+            if (title == null || materialName == null || (worldName == null && serverName == null)) {
                 this.plugin.getLogger().warning("Invalid Keys in " + title);
                 continue;
             }
 
-            try {
-                this.games.add(new GameDetail(title, worldName, materialName, details));
-            } catch (InvalidObjectException e) {
-                this.plugin.getLogger().warning("Invalid Values in " + title);
-                e.printStackTrace();
+            if (worldName != null) {
+                try {
+                    this.games.add(new GameWorldDetail(title, worldName, materialName, details));
+                } catch (InvalidObjectException e) {
+                    this.plugin.getLogger().warning("Invalid Values in " + title);
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    this.games.add(new GameServerDetail(title, serverName, materialName, details));
+                } catch (InvalidObjectException e) {
+                    this.plugin.getLogger().warning("Invalid Values in " + title);
+                    e.printStackTrace();
+                }
             }
         }
         return this.countGames();
